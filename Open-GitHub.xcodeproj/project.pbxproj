@@ -12,6 +12,7 @@
 		D12DC914249CB04500550D3F /* OpenGitHub.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D12DC912249CB04500550D3F /* OpenGitHub.xcdatamodeld */; };
 		D12DC916249CB04800550D3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D12DC915249CB04800550D3F /* Assets.xcassets */; };
 		D12DC919249CB04800550D3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D12DC917249CB04800550D3F /* LaunchScreen.storyboard */; };
+		D17EF972249D442E008094B0 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17EF971249D442E008094B0 /* AppCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		D12DC915249CB04800550D3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D12DC918249CB04800550D3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D12DC91A249CB04800550D3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D17EF971249D442E008094B0 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +56,23 @@
 		D12DC908249CB04500550D3F /* Open-GitHub */ = {
 			isa = PBXGroup;
 			children = (
-				D12DC909249CB04500550D3F /* AppDelegate.swift */,
-				D12DC90D249CB04500550D3F /* ViewController.swift */,
-				D12DC915249CB04800550D3F /* Assets.xcassets */,
-				D12DC917249CB04800550D3F /* LaunchScreen.storyboard */,
 				D12DC91A249CB04800550D3F /* Info.plist */,
-				D12DC912249CB04500550D3F /* OpenGitHub.xcdatamodeld */,
+				D17EF970249D3F81008094B0 /* Resourse */,
+				D12DC90D249CB04500550D3F /* ViewController.swift */,
 			);
 			path = "Open-GitHub";
+			sourceTree = "<group>";
+		};
+		D17EF970249D3F81008094B0 /* Resourse */ = {
+			isa = PBXGroup;
+			children = (
+				D12DC915249CB04800550D3F /* Assets.xcassets */,
+				D12DC909249CB04500550D3F /* AppDelegate.swift */,
+				D17EF971249D442E008094B0 /* AppCoordinator.swift */,
+				D12DC917249CB04800550D3F /* LaunchScreen.storyboard */,
+				D12DC912249CB04500550D3F /* OpenGitHub.xcdatamodeld */,
+			);
+			path = Resourse;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,6 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D17EF972249D442E008094B0 /* AppCoordinator.swift in Sources */,
 				D12DC914249CB04500550D3F /* OpenGitHub.xcdatamodeld in Sources */,
 				D12DC90E249CB04500550D3F /* ViewController.swift in Sources */,
 				D12DC90A249CB04500550D3F /* AppDelegate.swift in Sources */,
