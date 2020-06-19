@@ -18,8 +18,8 @@ class AppCoordinator {
     
     private let window: UIWindow
     
-    func start() {
-        let viewController = ViewController()
+    private func start() {
+        let viewController = SearchViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         self.window.rootViewController = navigationController
         self.window.makeKeyAndVisible()
