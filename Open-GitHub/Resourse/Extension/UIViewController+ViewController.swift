@@ -24,8 +24,8 @@ class ViewController: UIViewController {
             navigationController?.navigationBar.compactAppearance = appearance
             navigationController?.navigationBar.scrollEdgeAppearance = appearance
         } else {
-            navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-            navigationController?.navigationBar.tintColor = .white
+            navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.gitHubWhiteColor]
+            navigationController?.navigationBar.tintColor = .gitHubWhiteColor
             navigationController?.navigationBar.barTintColor = .gitHubBasicColor
             navigationController?.navigationBar.isTranslucent = false
         }
