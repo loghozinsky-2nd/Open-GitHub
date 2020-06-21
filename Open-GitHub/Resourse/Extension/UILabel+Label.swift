@@ -6,7 +6,7 @@ extension UILabel {}
 
 class Label: UILabel {
     
-    convenience init(_ value: String, size: CGFloat = 17, lineHeight: CGFloat = 1.01, fontWeight: UIFont.Weight = .regular, numberOfLines: Int = 0, color: UIColor = .black, strikethroughStyle: Int = 0, kern: CGFloat = -0.41, lineBreakMode: NSLineBreakMode = .byWordWrapping, textAlignment: NSTextAlignment = .left) {
+    convenience init(_ value: String, size: CGFloat = 17, lineHeight: CGFloat = 1.01, fontWeight: UIFont.Weight = .bold, numberOfLines: Int = 0, color: UIColor = .black, strikethroughStyle: Int = 0, kern: CGFloat = -0.41, lineBreakMode: NSLineBreakMode = .byWordWrapping, textAlignment: NSTextAlignment = .left) {
         self.init(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
         
         setValue(value, size: size, lineHeight: lineHeight, fontWeight: fontWeight, numberOfLines: numberOfLines, color: color, strikethroughStyle: strikethroughStyle, textAlignment: textAlignment)

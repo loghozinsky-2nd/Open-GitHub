@@ -12,11 +12,19 @@ import RxCocoa
 
 class SearchViewController: ViewController {
     
-    let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.separatorStyle = .none
+    let collectionView: UICollectionView = {
+        let layout: UICollectionViewFlowLayout = {
+            let layout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .vertical
+            layout.itemSize = .init(width: UIScreen.main.bounds.width - 32, height: 126)
+            
+            return layout
+        }()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.contentInset = .init(top: 16, left: 0, bottom: 16, right: 0)
+        collectionView.keyboardDismissMode = .onDrag
         
-        return tableView
+        return collectionView
     }()
     let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView()
@@ -25,38 +33,58 @@ class SearchViewController: ViewController {
         
         return activityIndicator
     }()
+    lazy var searchBar: UISearchBar = {
+        guard let searchBar = navigationItem.searchController?.searchBar else { fatalError("Search Controller should be initialized") }
+        
+        return searchBar
+    }()
+    
+    private var viewModel: SearchViewPresenteble!
+    var viewModelBuilder: SearchViewPresenteble.Builder!
+    var coordinator: SearchCoordinator!
+    
+    let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        setupNavigationBar()
-        setupLayout(for: tableView, activityIndicator)
-        setupBinding()
-    }
-    
-    private func setupNavigationBar() {
-        title = "Open GitHub"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.searchController = UISearchController(searchResultsController: nil)
-        navigationItem.searchController?.searchBar.tintColor = .gitHubWhiteColor
-        navigationItem.searchController?.obscuresBackgroundDuringPresentation = false
-        if #available(iOS 13.0, *) {
-            navigationItem.searchController?.searchBar.searchTextField.textColor = .gitHubWhiteColor
-        } else {
-            // Fallback on earlier versions
-            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.gitHubWhiteColor]
-        }
+        collectionView.register(SearchResultCollectionViewCell.self, forCellWithReuseIdentifier: SearchResultCollectionViewCell.reuseIdentifier)
+        
+        bindViewModel()
+        
+        setupLayout(for: collectionView, activityIndicator)
     }
     
     private func setupLayout(for views: UIView ...) {
         view.addSubviews(views)
         
-        tableView.fillSuperview()
-        activityIndicator.anchor(centerY: tableView.centerYAnchor, centerX: tableView.centerXAnchor)
+        collectionView.backgroundColor = .gitHubWhiteColor
+        
+        collectionView.fillSuperview()
+        activityIndicator.anchor(centerY: collectionView.centerYAnchor, centerX: collectionView.centerXAnchor)
     }
     
-    private func setupBinding() {
+    private func bindViewModel() {
+        viewModel = viewModelBuilder((
+            searchText: searchBar.rx.text.orEmpty.asDriver(),
+            ()
+        ))
         
+        viewModel.output.repositories
+            .bind(to: self.collectionView.rx
+                .items(
+                    cellIdentifier: SearchResultCollectionViewCell.reuseIdentifier,
+                    cellType: SearchResultCollectionViewCell.self)) { row, data, cell in
+                        cell.configureWithData(data)
+                    }
+            .disposed(by: disposeBag)
+        
+        collectionView
+            .rx
+            .modelSelected(GitHubRepository.self)
+            .subscribe(onNext: { (model) in
+                self.coordinator.openDetails(with: model)
+            }).disposed(by: disposeBag)
     }
     
 

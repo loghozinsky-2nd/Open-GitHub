@@ -20,4 +20,10 @@ extension UIColor {
             return UIColor(red: 246/255, green: 248/255, blue: 250/255, alpha: 1)
         }
     }
+    
+    open class var gitHubLinkColor: UIColor {
+        get {
+            return UIColor(red: 3/255, green: 102/255, blue: 214/255, alpha: 1)
+        }
+    }
 }
