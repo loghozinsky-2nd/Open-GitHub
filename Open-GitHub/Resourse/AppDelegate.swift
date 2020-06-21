@@ -12,12 +12,13 @@ import CoreData
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    var appCoordinator: AppCoordinator?
+    var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         let window = UIWindow(frame: UIScreen.main.bounds)
-        appCoordinator = AppCoordinator(window: window)
+        self.window = window
+        
+        AppCoordinator(window: window).start()
         
         return true
     }
