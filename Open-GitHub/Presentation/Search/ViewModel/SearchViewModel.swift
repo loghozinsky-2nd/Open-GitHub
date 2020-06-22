@@ -46,7 +46,7 @@ class SearchViewModel: SearchViewPresenteble {
             .debounce(.milliseconds(500))
             .distinctUntilChanged()
             .drive(onNext: { [weak self] (searchText) in
-                if searchText.count > 2 {
+                if searchText.count > 1 {
                     self?.fetchRepositories(query: searchText)
                 } else {
                     Repository.shared.gitHubRepositories.accept([])
@@ -56,7 +56,6 @@ class SearchViewModel: SearchViewPresenteble {
         
         output.repositories
             .subscribe { (event) in
-                print(">> reuqest: \(event)")
             }
         .   disposed(by: disposeBag)
     }

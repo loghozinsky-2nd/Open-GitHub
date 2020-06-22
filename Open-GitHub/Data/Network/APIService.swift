@@ -98,14 +98,10 @@ extension APIServiceDelegate {
     
     // MARK: - Request API logic
     func callEndPoint(_ url: String, method: Alamofire.HTTPMethod = .get, params: JsonDictionary = [:], headers: HTTPHeaders = [:], completion: @escaping (Response) -> Void) {
-        print(">> Request on API \(method): \(url)")
-        print(">> with params: \(params)")
-        print(">> and header: \(headers)")
         AF.request(url, method: method, parameters: params, headers: headers) { urlRequest in
             urlRequest.timeoutInterval = 5
         }.responseString { [weak self] (response) in
             guard let strongSelf = self else { return }
-            print(">> Response: \(response)")
             strongSelf.serializeResponse(response: response, completion: completion)
             strongSelf.sessionManager.removeValue(forKey: url)
         }
