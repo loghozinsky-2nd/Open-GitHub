@@ -34,19 +34,19 @@ struct GitHubRepository: Decodable {
     let description: String?
     let url: URL
     let createdAt: String
-    let updatedAt: String?
+    let updatedAt: String
     let stargazersCount: Int
+    let forksCount: Int
     let watchersCount: Int
     let language: String?
-    let forksCount: Int
     let score: Double
     
     private enum CodingKeys: String, CodingKey {
+        case owner
         case id
         case fullName = "full_name"
         case description
         case url = "html_url"
-        case owner
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case stargazersCount = "stargazers_count"
@@ -54,6 +54,22 @@ struct GitHubRepository: Decodable {
         case language
         case forksCount = "forks_count"
         case score
+    }
+    
+    init(from entity: GitHubRepositoryEntity) {
+        self.owner = GitHubUser()
+//        self.owner = .init(from: entity.owner)
+        self.id = Int(entity.repositoryId)
+        self.fullName = entity.full_name
+        self.description = entity.description_
+        self.url = entity.html_url ?? URL(string: "https://github.com/")!
+        self.createdAt = entity.created_at ?? ""
+        self.updatedAt = entity.updated_at ?? ""
+        self.stargazersCount = Int(entity.stargazers_count)
+        self.watchersCount = Int(entity.watchers_count)
+        self.language = entity.language
+        self.forksCount = 0
+        self.score = entity.score
     }
     
 }
@@ -71,5 +87,29 @@ struct GitHubUser: Decodable {
         case avatarUrl = "avatar_url"
         case url
         case type
+    }
+    
+    init() {
+        self.login = String()
+        self.id = 0
+        self.avatarUrl = nil
+        self.url = nil
+        self.type = String()
+    }
+    
+    init(login: String, id: Int, avatarUrl: URL?, url: URL?, type: String) {
+        self.login = login
+        self.id = id
+        self.avatarUrl = avatarUrl
+        self.url = url
+        self.type = type
+    }
+    
+    init(from entity: GitHubUserEntity) {
+        self.login = entity.login ?? ""
+        self.id = Int(entity.userId)
+        self.avatarUrl = entity.avatarUrl ?? URL(string: "https://github.com/")
+        self.url = entity.userUrl ?? URL(string: "https://github.com/")
+        self.type = entity.type ?? ""
     }
 }

@@ -62,3 +62,9 @@ extension SearchResultCollectionViewCell: SearchResultViewModelDelegate {
         imageView.image = image
     }
 }
+
+class SearchLocalCollectionViewCell: SearchResultCollectionViewCell {
+    
+    static let reuseChildIdentifier = String(describing: self)
+    
+}

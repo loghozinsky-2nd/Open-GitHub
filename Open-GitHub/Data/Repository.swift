@@ -16,11 +16,26 @@ class Repository {
     static let shared = Repository()
     
     var gitHubRepositories = BehaviorRelay<[GitHubRepository]>(value: [])
+    var savedGitHubRepositories = BehaviorRelay<[GitHubRepository]>(value: [])
     
     // MARK: - GitHubRepositories
     func getRepository(query: String, sortBy: SortByType) {
         APIService.shared.getRepositories(query: query, sortBy: sortBy.rawValue) { [weak self] (response) in
-            self?.gitHubRepositories.accept(response.items)
+            let items = response.items
+            self?.gitHubRepositories.accept(items)
+            
+            CoreDataService.shared.delete(entityName: "GitHubRepositoryEntity") { () in
+                CoreDataService.shared.save(items)
+            }
+        }
+    }
+    
+    func getSavedGitHubRepository() {
+        CoreDataService.shared.fetch { [weak self] (repositories) in
+            let items = repositories.sorted {
+                $0.stargazersCount > $1.stargazersCount
+            }
+            self?.gitHubRepositories.accept(items)
         }
     }
     

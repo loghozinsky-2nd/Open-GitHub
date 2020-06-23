@@ -8,7 +8,6 @@
 
 import UIKit
 import RxSwift
-import RxCocoa
 
 class SearchViewController: ViewController {
     
@@ -71,12 +70,11 @@ class SearchViewController: ViewController {
         ))
         
         viewModel.output.repositories
-            .bind(to: self.collectionView.rx
-                .items(
-                    cellIdentifier: SearchResultCollectionViewCell.reuseIdentifier,
-                    cellType: SearchResultCollectionViewCell.self)) { row, data, cell in
-                        cell.configureWithData(data)
-                    }
+            .bind(to: collectionView.rx.items(
+                cellIdentifier: SearchResultCollectionViewCell.reuseIdentifier,
+                cellType: SearchResultCollectionViewCell.self)) { row, data, cell in
+                    cell.configureWithData(data)
+                }
             .disposed(by: disposeBag)
         
         collectionView
@@ -89,4 +87,3 @@ class SearchViewController: ViewController {
     
 
 }
-
