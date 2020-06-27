@@ -43,6 +43,12 @@ class SearchViewController: ViewController {
     var coordinator: SearchCoordinator!
     
     let disposeBag = DisposeBag()
+    
+    override func loadView() {
+        super.loadView()
+        // Do any additional setup before loading the view.
+        setupLayout(for: collectionView, activityIndicator)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,8 +56,6 @@ class SearchViewController: ViewController {
         collectionView.register(SearchResultCollectionViewCell.self, forCellWithReuseIdentifier: SearchResultCollectionViewCell.reuseIdentifier)
         
         bindViewModel()
-        
-        setupLayout(for: collectionView, activityIndicator)
     }
     
     private func setupLayout(for views: UIView ...) {
@@ -65,14 +69,13 @@ class SearchViewController: ViewController {
     
     private func bindViewModel() {
         viewModel = viewModelBuilder((
-            searchText: searchBar.rx.text.orEmpty.asDriver(),
-            ()
+            searchBar.rx.text.orEmpty.asDriver()
         ))
         
-        viewModel.output.repositories
+        viewModel.output
             .bind(to: collectionView.rx.items(
                 cellIdentifier: SearchResultCollectionViewCell.reuseIdentifier,
-                cellType: SearchResultCollectionViewCell.self)) { row, data, cell in
+                cellType: SearchResultCollectionViewCell.self)) { (row, data, cell) in
                     cell.configureWithData(data)
                 }
             .disposed(by: disposeBag)
@@ -80,8 +83,8 @@ class SearchViewController: ViewController {
         collectionView
             .rx
             .modelSelected(GitHubRepository.self)
-            .subscribe(onNext: { (model) in
-                self.coordinator.openDetails(with: model)
+            .subscribe(onNext: { [weak self] (model) in
+                self?.coordinator.openDetails(with: model)
             }).disposed(by: disposeBag)
     }
     

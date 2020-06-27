@@ -11,14 +11,8 @@ import RxCocoa
 
 protocol SearchViewPresenteble {
     typealias Builder = (Input) -> SearchViewPresenteble
-    typealias Input = (
-        searchText: Driver<String>,
-        ()
-    )
-    typealias Output = (
-        repositories: Observable<[GitHubRepository]>,
-        savedRepositories: Observable<[GitHubRepository]>
-    )
+    typealias Input = Driver<String>
+    typealias Output = Observable<[GitHubRepository]>
     
     var input: Input { get }
     var output: Output { get }
@@ -33,10 +27,7 @@ class SearchViewModel: SearchViewPresenteble {
     
     init(input: SearchViewPresenteble.Input) {
         self.input = input
-        self.output = Output(
-            repositories: Repository.shared.gitHubRepositories.asObservable().catchErrorJustReturn([]),
-            savedRepositories: Repository.shared.savedGitHubRepositories.asObservable().catchErrorJustReturn([])
-        )
+        self.output = Repository.shared.gitHubRepositories.asObservable().catchErrorJustReturn([])
         
         process()
     }
@@ -44,7 +35,7 @@ class SearchViewModel: SearchViewPresenteble {
     private func process() {
         Repository.shared.getSavedGitHubRepository()
         
-        input.searchText
+        input
             .debounce(.milliseconds(500))
             .distinctUntilChanged()
             .drive(onNext: { [weak self] (searchText) in
@@ -58,11 +49,7 @@ class SearchViewModel: SearchViewPresenteble {
             })
             .disposed(by: disposeBag)
         
-        output.repositories
-            .subscribe()
-            .disposed(by: disposeBag)
-        
-        output.savedRepositories
+        output
             .subscribe()
             .disposed(by: disposeBag)
     }
