@@ -28,13 +28,28 @@ class CoreDataService {
 }
 
 extension CoreDataService {
-    func delete(entityName: String, completion: @escaping () -> Void) {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+    func fetch(completion: @escaping ([GitHubRepository]) -> Void) {
+        let request = NSFetchRequest<GitHubRepositoryEntity>(entityName: GitHubRepositoryEntity.description())
+        request.returnsObjectsAsFaults = false
+        request.sortDescriptors = [NSSortDescriptor(key: "stargazers_count", ascending: false)]
         
         do {
-            let items = try context.fetch(fetchRequest) as! [NSManagedObject]
-            
-            for item in items {
+            let data = try self.context.fetch(request)
+            completion(
+                data.map {
+                    GitHubRepository(from: $0)
+                }
+            )
+        } catch {
+            print("!!! CoreDataService: cannot fetch GitHubRepositories from GitHubRepositoryEntity")
+        }
+    }
+    
+    func delete(completion: @escaping () -> Void) {
+        let fetchRequest = NSFetchRequest<GitHubRepositoryEntity>(entityName: GitHubRepositoryEntity.description())
+        
+        do {
+            for item in try context.fetch(fetchRequest) {
                 context.delete(item)
             }
             
@@ -46,30 +61,8 @@ extension CoreDataService {
         }
     }
     
-    func fetch(completion: @escaping ([GitHubRepository]) -> Void) {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "GitHubRepositoryEntity")
-        request.returnsObjectsAsFaults = false
-        
-        do {
-            let result = try self.context.fetch(request)
-            
-            if let data = result as? [GitHubRepositoryEntity] {
-                let models = data.map { (entity) -> GitHubRepository in
-                    let model: GitHubRepository = .init(from: entity)
-                    return model
-                }
-                
-                completion(models)
-            } else {
-                fatalError()
-            }
-        } catch {
-            print("!!! CoreDataService: cannot fetch GitHubRepositories from GitHubRepositoryEntity")
-        }
-    }
-    
     func save(_ repositories: [GitHubRepository]) {
-        guard let entityDescription = NSEntityDescription.entity(forEntityName: "GitHubRepositoryEntity", in: self.context) else {
+        guard let entityDescription = NSEntityDescription.entity(forEntityName: GitHubRepositoryEntity.description(), in: self.context) else {
             print("!!! CoreDataService: cannot get entityDescription for GitHubRepositoryEntity")
             return
         }
