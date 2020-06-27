@@ -57,8 +57,8 @@ struct GitHubRepository: Decodable {
     }
     
     init(from entity: GitHubRepositoryEntity) {
-        self.owner = GitHubUser()
 //        self.owner = .init(from: entity.owner)
+        self.owner = .init()
         self.id = Int(entity.repositoryId)
         self.fullName = entity.full_name
         self.description = entity.description_
@@ -68,7 +68,7 @@ struct GitHubRepository: Decodable {
         self.stargazersCount = Int(entity.stargazers_count)
         self.watchersCount = Int(entity.watchers_count)
         self.language = entity.language
-        self.forksCount = 0
+        self.forksCount = Int(entity.forks_count)
         self.score = entity.score
     }
     
